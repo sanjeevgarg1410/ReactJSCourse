@@ -1,13 +1,19 @@
 import Counter from "./components/Counter";
 import GenreSelect from "./components/GenreSelect";
 import SearchForm from "./components/SearchForm";
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css'
 
 function App() {
+  const [results , setResults] = useState([])
+
   const handleSearch = (query) => {
-      console.log('Searching for:', query);
-      window.alert(`Searching for: ${query}`);
+     const queryResults = [
+        "first result",
+        "second result",
+        query
+     ]
+     setResults(queryResults);
   };
 
   const handleSelectGenre = (genre) => {
@@ -18,7 +24,7 @@ function App() {
   return (
       <div className="app">
           <Counter initialValue={0} />
-          <SearchForm initialSearchQuery='sanjeev' onSearch={handleSearch} />
+          <SearchForm initialSearchQuery='sanjeev' onSearch={handleSearch} results={results} />
           <GenreSelect genres={['Action', 'Drama', 'Comedy']} selectedGenre='Drama' onSelect={handleSelectGenre} />
       </div>
   );

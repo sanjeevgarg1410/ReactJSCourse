@@ -4,7 +4,7 @@ class SearchForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            query: this.props.initialSearchQuery
+            query: this.props.initialSearchQuery || '',
         };
     }
 
@@ -23,11 +23,17 @@ class SearchForm extends React.Component {
     }
 
     render() {
+        const searchResults = this.props.results || [];
         return (
             <div className="searchForm">
-                <h1>Search</h1>
-                <input value={this.state.query} onChange={this.handleInputChange} onKeyPress={this.handleKeyPress} className="searchInput"/>
-                <button onClick={this.handleSearch} className="btn">Search</button>
+                <h1>Search Form</h1>
+                <input value={this.state.query} onChange={this.handleInputChange} onKeyPress={this.handleKeyPress} className="searchInput" placeholder='Search' name='search'/>
+                <button onClick={this.handleSearch} className="btn" type='submit'>Search</button>
+                <div className='search-results'>
+                    {searchResults.map( (result) =>{
+                        return <div> {result} </div>
+                    })}
+                </div>
             </div>
         );
     }
