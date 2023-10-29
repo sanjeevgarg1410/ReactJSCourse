@@ -1,0 +1,19 @@
+
+.app {
+    padding: 100px;
+    margin:auto;
+}
+
+
+.movie-list-container {
+ 
+    /* overflow-y: auto; */
+  }
+  
+  .movie-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust grid styles as needed */
+    gap: 20px;
+    padding: 20px;
+    /* Add more styles for the movie list as needed */
+  }

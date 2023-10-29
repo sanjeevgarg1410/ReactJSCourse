@@ -1,32 +1,46 @@
-import Counter from "./components/Counter";
-import GenreSelect from "./components/GenreSelect";
-import SearchForm from "./components/SearchForm";
-import React, { useState } from 'react';
-import './App.css'
+import React from 'react';
+
+
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import sampleMovies from './data/samplemovies';
+import './components/Movies.css'
+import MovieDetails from './components/MovieDetails';
+import SortControl from './components/SortControl';
+import MovieTile from './components/MovieTile';
+import Movies from './components/Movies';
+import { useState } from 'react';
+
+
 
 function App() {
-  const [results , setResults] = useState([])
+    const movies = sampleMovies;
+    const [sortSelection, setSortSelection] = useState('releaseDate');
+    const [moviesData, setMoviesData] = useState(sampleMovies);
 
-  const handleSearch = (query) => {
-     const queryResults = [
-        "first result",
-        "second result",
-        query
-     ]
-     setResults(queryResults);
-  };
-
-  const handleSelectGenre = (genre) => {
-      console.log('Selected Genre:', genre);
-      window.alert(`Selected Genre: ${genre}`);
-  };
+    const handleSortChange = (value) => {
+        setSortSelection(value);
+    
+        // Perform sorting based on the selected sort option
+        if (value === 'releaseDate') {
+          // Sort by release date
+          const sortedMovies = [...moviesData].sort((a, b) => a.releaseYear - b.releaseYear);
+          setMoviesData(sortedMovies);
+        } else if (value === 'title') {
+          // Sort by movie title
+          const sortedMovies = [...moviesData].sort((a, b) => a.movieName.localeCompare(b.movieName));
+          setMoviesData(sortedMovies);
+        }
+      };
 
   return (
+    <Router>
       <div className="app">
-          <Counter initialValue={0} />
-          <SearchForm initialSearchQuery='sanjeev' onSearch={handleSearch} results={results} />
-          <GenreSelect genres={['Action', 'Drama', 'Comedy']} selectedGenre='Drama' onSelect={handleSelectGenre} />
+        <Routes>
+          <Route exact path="/" element={<Movies movies={moviesData} handleSortChange={handleSortChange} sortSelection={sortSelection}/>} />
+          <Route path="/movie/:id" element={<MovieDetails/>} />
+        </Routes>
       </div>
+    </Router>
   );
 }
 
