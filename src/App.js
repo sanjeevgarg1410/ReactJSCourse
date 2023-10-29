@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import Counter from "./components/Counter";
+import GenreSelect from "./components/GenreSelect";
+import SearchForm from "./components/SearchForm";
+import React, { useState } from 'react';
+import './App.css'
 
 function App() {
+  const [results , setResults] = useState([])
+
+  const handleSearch = (query) => {
+     const queryResults = [
+        "first result",
+        "second result",
+        query
+     ]
+     setResults(queryResults);
+  };
+
+  const handleSelectGenre = (genre) => {
+      console.log('Selected Genre:', genre);
+      window.alert(`Selected Genre: ${genre}`);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="app">
+          <Counter initialValue={0} />
+          <SearchForm initialSearchQuery='sanjeev' onSearch={handleSearch} results={results} />
+          <GenreSelect genres={['Action', 'Drama', 'Comedy']} selectedGenre='Drama' onSelect={handleSelectGenre} />
+      </div>
   );
 }
 
