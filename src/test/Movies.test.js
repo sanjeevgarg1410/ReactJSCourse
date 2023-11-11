@@ -2,23 +2,10 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Movies from '../components/Movies'; // Import your Movies component
+import sampleMovies from '../data/samplemovies';
 
 describe('Movies', () => {
-  const movies = [
-    {
-      id: 1,
-      movieName: 'Movie 1',
-      imageUrl: 'https://example.com/movie1.jpg',
-      // Add other movie data
-    },
-    {
-      id: 2,
-      movieName: 'Movie 2',
-      imageUrl: 'https://example.com/movie2.jpg',
-      // Add other movie data
-    },
-    // Add more movie objects
-  ];
+  const movies = sampleMovies;
 
   it('should render a list of movies with links', () => {
     render(

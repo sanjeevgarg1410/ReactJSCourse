@@ -17,11 +17,10 @@ describe('MovieDetails', () => {
     );
 
     // Assert that specific movie details are present
-    expect(screen.getByText(sampleMovie.movieName)).toBeInTheDocument();
-    expect(screen.getByText(`Release Year: ${sampleMovie.releaseYear}`)).toBeInTheDocument();
+    expect(screen.getByText(sampleMovie.title)).toBeInTheDocument();
+    expect(screen.getByText(`Release Date: ${sampleMovie.releaseDate}`)).toBeInTheDocument();
     expect(screen.getByText(`Rating: ${sampleMovie.rating}`)).toBeInTheDocument();
-    expect(screen.getByText(`Duration: ${sampleMovie.duration} minutes`)).toBeInTheDocument();
-    expect(screen.getByText(sampleMovie.description)).toBeInTheDocument();
+    expect(screen.getByText(`Runtime: ${sampleMovie.runtime}`)).toBeInTheDocument();
   });
 
   it('should display "Movie not found" when movie is not found', () => {
