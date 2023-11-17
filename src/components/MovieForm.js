@@ -3,14 +3,12 @@ import './MovieForm.css'
 
 function MovieForm({ initialMovieInfo, onSubmit }) {
   const [movie, setMovie] = useState({
-    name: '',
     title: '',
-    rating: '',
-    runtime: '',
+    runtime: 0,
     overview: '',
-    releaseDate: '',
-    movieUrl: '',
-    genre: ''
+    release_date: '',
+    poster_path: '',
+    genres: []
   });
 
   useEffect(() => {
@@ -18,41 +16,31 @@ function MovieForm({ initialMovieInfo, onSubmit }) {
       setMovie(initialMovieInfo);
     } else {
       setMovie({
-        name: '',
         title: '',
-        rating: '',
-        runtime: '',
+        runtime: 0,
         overview: '',
-        releaseDate: '',
-        movieUrl: '',
-        genre: ''
+        release_date: '',
+        poster_path: '',
+        genres: []
       });
     }
   }, [initialMovieInfo]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    var { name, value, type } = e.target;
+    if(type === "number")
+      value = parseFloat(value);
     setMovie({ ...movie, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(movie);
+    onSubmit(movie,"POST");
   };
 
   return (
     <div className="movie-form">
     <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Name</label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          value={movie.name}
-          onChange={handleChange}
-        />
-      </div>
       <div >
         <label htmlFor="title">Title</label>
         <input
@@ -64,21 +52,11 @@ function MovieForm({ initialMovieInfo, onSubmit }) {
         />
       </div>
       <div>
-        <label htmlFor="rating">Rating</label>
-        <input
-          id="rating"
-          name="rating"
-          type="text"
-          value={movie.rating}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
         <label htmlFor="runtime">Runtime</label>
         <input
           id="runtime"
           name="runtime"
-          type="text"
+          type="number"
           value={movie.runtime}
           onChange={handleChange}
         />
@@ -93,32 +71,32 @@ function MovieForm({ initialMovieInfo, onSubmit }) {
         />
       </div>
       <div>
-        <label htmlFor="releasedate">Release Date</label>
+        <label htmlFor="release_date">Release Date</label>
         <input
-          id="releasedate"
-          name="releaseDate"
+          id="release_date"
+          name="release_date"
           type="date"
-          value={movie.releaseDate}
+          value={movie.release_date}
           onChange={handleChange}
         />
       </div>
       <div>
-        <label htmlFor="movieurl">Movie URL</label>
+        <label htmlFor="poster_path">Movie URL</label>
         <input
-          id="movieurl"
-          name="movieUrl"
+          id="poster_path"
+          name="poster_path"
           type="url"
-          value={movie.movieUrl}
+          value={movie.poster_path}
           onChange={handleChange}
         />
       </div>
       <div>
-        <label htmlFor="genre">Genre</label>
+        <label htmlFor="genres">Genres(comma, separated)</label>
         <input 
-          id="genre"
-          name="genre"
+          id="genres"
+          name="genres"
           type="text"
-          value={movie.genre}
+          value={movie.genres}
           onChange={handleChange}
         />
       </div>

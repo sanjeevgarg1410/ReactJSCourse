@@ -1,11 +1,12 @@
 import React from "react";
 
-class GenreSelect extends React.Component {
+function GenreSelect () {
+
   handleGenreClick = (genre) => {
     this.props.onSelect(genre);
   };
 
-  render() {
+ 
     return (
       <div className="genreSelect">
         <h1>Genre</h1>
@@ -23,6 +24,5 @@ class GenreSelect extends React.Component {
       </div>
     );
   }
-}
 
 export default GenreSelect;
