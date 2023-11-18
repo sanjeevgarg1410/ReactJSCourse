@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {useNavigate, useParams} from 'react-router-dom'
 import SortControl from './SortControl';
 import MovieTile from './MovieTile';
 import MovieDialog from './MovieDialog';
@@ -7,16 +8,34 @@ import GenreSelect from './GenreSelect';
 import SearchForm from './SearchForm';
 import './MovieListPage.css'
 
+
 const MovieListPage = () => {
+  const navigate = useNavigate();
+  const params = useParams();
+
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [movies, setMovies] = useState([]);
-  const [sortSelection, setSortSelection] = useState('release_date');
+  const [sortSelection, setSortSelection] = useState(params.sortBy || 'release_date');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchBy, setSearchBy] = useState('title');
-  const [genre, setGenre] = useState('ALL');
+  const [genre, setGenre] = useState(params.filter || 'ALL');
+  const [sortOrder, setSortOrder] = useState(params.sortOrder || 'asc');
 
   useEffect(() => {
-    let urlStr = `${APP_URL}/movies?sortBy=${sortSelection}&sortOrder=asc`;
+    console.log(params);
+    let urlStr = `?sortBy=${sortSelection}&sortOrder=${sortOrder}`;
+    if(searchQuery && searchQuery !== '') {
+      urlStr = `${urlStr}&search=${searchQuery}&searchBy=${searchBy}`;
+    }
+    if(genre !== 'ALL') {
+      urlStr = `${urlStr}&filter=${genre}`;
+    }
+    navigate(urlStr);
+  }, [sortSelection, genre, searchQuery, searchBy, sortOrder,navigate])
+
+
+  useEffect(() => {
+    let urlStr = `${APP_URL}/movies?sortBy=${sortSelection}&sortOrder=${sortOrder}`;
     if(searchQuery && searchQuery !== '') {
       urlStr = `${urlStr}&search=${searchQuery}&searchBy=${searchBy}`;
     }
@@ -27,7 +46,7 @@ const MovieListPage = () => {
     fetch(url).then((res) => res.json()).then((resJson) => {
       setMovies(resJson.data);
     });
-  }, [sortSelection, genre, searchQuery, searchBy])
+  }, [sortSelection, genre, searchQuery, searchBy, sortOrder])
 
   const handleAddMovieClick = () => {
     setDialogOpen(true);

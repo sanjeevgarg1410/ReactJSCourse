@@ -5,12 +5,12 @@ import './MovieDetails.css'; // Ensure you have the corresponding CSS file
 import { APP_URL } from '../const';
 
 const MovieDetails = () => {
-  const { id } = useParams();
+  const { movieId } = useParams();
   const [editMode, setEditMode] = useState(false); // State to control the visibility of the MovieDialog
   const [movie, setMovie] = useState({});
  
   useEffect(() => {
-    const url = new URL(`${APP_URL}/movies/${id}`)
+    const url = new URL(`${APP_URL}/movies/${movieId}`)
       fetch(url).then(res => res.json()).then((res) =>{
          setMovie(res);
          console.log(res);
