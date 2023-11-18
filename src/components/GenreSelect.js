@@ -1,22 +1,21 @@
 import React from "react";
 
-function GenreSelect () {
+function GenreSelect (props) {
 
-  handleGenreClick = (genre) => {
-    this.props.onSelect(genre);
+  const handleGenreClick = (genre) => {
+    props.onSelect(genre);
   };
 
  
     return (
-      <div className="genreSelect">
-        <h1>Genre</h1>
-        {this.props.genres.map((genre) => (
+      <div className="genres">
+        {props.genres.map((genre) => (
           <button
             key={genre}
             className={`genreBtn ${
-              this.props.selectedGenre === genre ? "selected" : ""
+              props.selectedGenre === genre ? "selected" : ""
             }`}
-            onClick={() => this.handleGenreClick(genre)}
+            onClick={() => handleGenreClick(genre)}
           >
             {genre}
           </button>

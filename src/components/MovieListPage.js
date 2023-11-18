@@ -3,32 +3,31 @@ import SortControl from './SortControl';
 import MovieTile from './MovieTile';
 import MovieDialog from './MovieDialog';
 import { APP_URL } from '../const';
+import GenreSelect from './GenreSelect';
+import SearchForm from './SearchForm';
+import './MovieListPage.css'
 
 const MovieListPage = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [movies, setMovies] = useState([]);
-  const [sortSelection, setSortSelection] = useState('releaseDate');
-
-  const handleSortChange = (value) => {
-    setSortSelection(value);
-    // Perform sorting based on the selected sort option
-    if (value === 'releaseDate') {
-      // Sort by release date
-      const sortedMovies = [...movies].sort((a, b) => a.release_date.localeCompare(b.release_date));
-      setMovies(sortedMovies);
-    } else if (value === 'title') {
-      // Sort by movie title
-      const sortedMovies = [...movies].sort((a, b) => a.title.localeCompare(b.title));
-      setMovies(sortedMovies);
-    }
-  };
+  const [sortSelection, setSortSelection] = useState('release_date');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchBy, setSearchBy] = useState('title');
+  const [genre, setGenre] = useState('ALL');
 
   useEffect(() => {
-    const url = new URL(`${APP_URL}/movies`);
+    let urlStr = `${APP_URL}/movies?sortBy=${sortSelection}&sortOrder=asc`;
+    if(searchQuery && searchQuery !== '') {
+      urlStr = `${urlStr}&search=${searchQuery}&searchBy=${searchBy}`;
+    }
+    if(genre !== 'ALL') {
+      urlStr = `${urlStr}&filter=${genre}`;
+    }
+    const url = new URL(urlStr);
     fetch(url).then((res) => res.json()).then((resJson) => {
       setMovies(resJson.data);
     });
-  }, [])
+  }, [sortSelection, genre, searchQuery, searchBy])
 
   const handleAddMovieClick = () => {
     setDialogOpen(true);
@@ -66,12 +65,28 @@ const MovieListPage = () => {
     }); 
   }
 
+  const onSearch = (query) => {
+    setSearchQuery(query);
+  }
+
+  const handleSortChange = (value) => {
+    setSortSelection(value);
+  };
+
+  const onSelect = (selectedGenre) => {
+    setGenre(selectedGenre);
+  }
+
   return (
     <div>
-      <SortControl currentSelection={sortSelection} onSortChange={handleSortChange} />
       <button onClick={handleAddMovieClick} className="add-movie-button">
         Add Movie
       </button>
+      <SearchForm  onSearch= {onSearch}/>
+      <div className='topheader'>
+        <GenreSelect genres={["ALL","THRILLER","COMEDY","ACTION"]} selectedGenre = {genre} onSelect = {onSelect}/>
+        <SortControl currentSelection={sortSelection} onSortChange={handleSortChange} />
+      </div>
       <div className="movie-list">
         {movies.map((movie) => (
           <MovieTile key={movie.id} movieInfo={movie} onDelete={handlDelete} />

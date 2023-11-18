@@ -9,7 +9,7 @@ const SortControl = ({ currentSelection, onSortChange }) => {
     <div className="sort-control">
       <label>Sort by:</label>
       <select value={currentSelection} onChange={handleSortChange}>
-        <option value="releaseDate">Release Date</option>
+        <option value="release_date">Release Date</option>
         <option value="title">Title</option>
       </select>
     </div>
