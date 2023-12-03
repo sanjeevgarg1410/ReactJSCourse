@@ -9,7 +9,7 @@ import MovieDetails from './MovieDetails';
 const MovieDialog = () => {
   const navigate = useNavigate();
   const context = useOutletContext();
-  const onSubmit = context.movieSubmitHandler;
+  const onSubmitHandler = context.onSubmitHandler;
   const initialMovieInfo = context.initialMovieInfo;
   const displayMode = context.display;
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -17,7 +17,7 @@ const MovieDialog = () => {
 
 
   const handleFormSubmit = (movieData) => {
-    onSubmit(movieData); // Call the provided onMovieUpdate function with the new movie data
+    onSubmitHandler(movieData); // Call the provided onMovieUpdate function with the new movie data
     navigate("/movies");
   };
 
@@ -38,10 +38,10 @@ const MovieDialog = () => {
     <>
       {isDialogOpen && (
         <Dialog
-          title={displayMode === 'list' ? "Movie Details" : displayMode === 'edit' ?  'Edit Movie' : 'Add Movie'}
+          title={displayMode === 'details' ? "Movie Details" : displayMode === 'edit' ?  'Edit Movie' : 'Add Movie'}
           onClose={handleCloseDialog}
         >
-          {displayMode !== 'list' ?  <MovieForm
+          {displayMode !== 'details' ?  <MovieForm
             initialMovieInfo={movieInfo}
             onSubmit={handleFormSubmit}
           />: <MovieDetails/>}

@@ -2,12 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {useNavigate, useParams, Outlet , Link , useOutletContext} from 'react-router-dom'
 import SortControl from './SortControl';
 import MovieTile from './MovieTile';
-import MovieDialog from './MovieDialog';
 import { APP_URL } from '../const';
 import GenreSelect from './GenreSelect';
 import SearchForm from './SearchForm';
-import MovieDetails from './MovieDetails'
-import Dialog from './Dialog'
 import './MovieListPage.css'
 
 
@@ -15,20 +12,14 @@ const MovieListPage = () => {
   const navigate = useNavigate();
   const { movieId } = useParams();
   const searchParams = new URL(window.location).searchParams;
-  const [editMode, setEditMode] = useState(false);
-  const [isDialogOpen, setDialogOpen] = useState(false);
   const [movies, setMovies] = useState([]);
   const [sortSelection, setSortSelection] = useState(searchParams.get('sortBy')|| 'release_date');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchBy, setSearchBy] = useState('title');
   const [genre, setGenre] = useState(searchParams.get('filter')|| 'ALL');
   const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'asc');
-
-  const [isModalOpen, setModalOpen] = useState(false);
   const [selectedMovieId, setSelectedMovieId] = useState(movieId);
   const [movieEdit, setMovieEdit] = useState(null);
-
-  const [displayMode, setDisplayMode] = useState('list');
 
   const openModal = (movieId) => {
     setSelectedMovieId(movieId);
@@ -39,15 +30,6 @@ const MovieListPage = () => {
     setSelectedMovieId(null);
     navigate("/movies");
   };
-
-  useEffect( () => {
-       if(movieId) {
-         setDisplayMode("details");
-       }
-       if(window.location.pathname.endsWith('/edit')) {
-        setDisplayMode("edit");
-      }
-  },[])
 
   useEffect(() => {
     let urlStr = `?sortBy=${sortSelection}&sortOrder=${sortOrder}`;
@@ -78,21 +60,13 @@ const MovieListPage = () => {
     });
   }, [sortSelection, genre, searchQuery, searchBy, sortOrder])
 
-  const handleAddMovieClick = () => {
-    setDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-  };
-
-  const handleMovieSubmit = (newMovie, reqType) => {
+  const handleMovieSubmit = (newMovie) => {
     // Logic to handle the new movie submission
-    newMovie = {...newMovie, genres: newMovie.genres?.split(",")}
-    console.log(newMovie);
+    newMovie = {...newMovie, genres: newMovie.genres?.split(",") , runtime: Number(newMovie.runtime) }
+  
     const url = new URL(`${APP_URL}/movies`);
     fetch(url , {
-      method: reqType,
+      method: "POST",
       body: JSON.stringify(newMovie),
       headers: {
         "content-type": "application/json"
@@ -101,7 +75,8 @@ const MovieListPage = () => {
        const newMovies = [...movies, newMovie];
        setMovies(newMovies);
     })
-    setDialogOpen(false);
+
+    navigate("/movies")
   };
 
   const handlDelete = (id) => {
@@ -144,10 +119,11 @@ const MovieListPage = () => {
         )
       );
     })
-    setEditMode(false); // Close the edit dialog
+    navigate("/movies");
   };
 
   const handleEditClick = (movieEdit) => {
+    setMovieEdit(movieEdit);
     navigate(`/movies/${movieEdit.id}/edit`);
   };
 
@@ -155,7 +131,21 @@ const MovieListPage = () => {
   const handleAddMovieLinkClick = () => {
     navigate("/movies/new?sortBy=release_date&sortOrder=asc");
   }
+
+  let displayMode = '';
   
+  if(movieId) {
+    displayMode = "details"
+  }
+  if(window.location.pathname.endsWith('/edit')) {
+    displayMode = "edit"
+  }
+  if(window.location.pathname.endsWith('/new')) {
+    displayMode = "new"
+  }
+
+  let movieSubmitHandler = displayMode === 'new' ? handleMovieSubmit : handleMovieUpdate;
+
   return (
     <div>
       <button onClick={handleAddMovieLinkClick}>Add Movie</button>
@@ -169,7 +159,7 @@ const MovieListPage = () => {
           <MovieTile key={movie.id} movieInfo={movie} onDelete={handlDelete} handleClick={(movie) => openModal(movie.id)} handleEditClick={handleEditClick}/>
         ))}
       </div>
-      <Outlet context={{movieSubmitHandler: handleMovieSubmit , display: displayMode ,   initialMovieInfo: movieEdit }}/>
+      <Outlet context={{onSubmitHandler: movieSubmitHandler , display: displayMode ,   initialMovieInfo: movieEdit }}/>
     </div>
   );
 };
