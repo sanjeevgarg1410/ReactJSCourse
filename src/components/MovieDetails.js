@@ -4,9 +4,7 @@ import MovieDialog from './MovieDialog'; // Import the MovieDialog component
 import './MovieDetails.css'; // Ensure you have the corresponding CSS file
 import { APP_URL } from '../const';
 
-const MovieDetails = () => {
-  const { movieId } = useParams();
-  const [editMode, setEditMode] = useState(false); // State to control the visibility of the MovieDialog
+const MovieDetails = ({movieId}) => {
   const [movie, setMovie] = useState({});
  
   useEffect(() => {
@@ -16,32 +14,6 @@ const MovieDetails = () => {
          console.log(res);
       })
   },[])
-
-  const handleEditClick = () => {
-    setEditMode(true); // Set the state to true to open the MovieDialog
-  };
-
-
-  const handleMovieUpdate = (newMovie) => {
-    // Logic to handle the new movie submission
-    if(typeof(newMovie.genres) === 'string')
-        newMovie = {...newMovie, genres: newMovie.genres?.split(",")}
-    const url = new URL(`${APP_URL}/movies`);
-    fetch(url , {
-      method: "PUT",
-      body: JSON.stringify(newMovie),
-      headers: {
-        "content-type": "application/json"
-      }
-    }).then(res => res.json()).then((newMovie)=> {
-       setMovie(newMovie);
-    })
-    setEditMode(false); // Close the edit dialog
-  };
-
-  const handleCloseDialog = () => {
-    setEditMode(false);
-  }
 
   if (!movie) {
     return <div>Movie not found.</div>;
@@ -59,18 +31,7 @@ const MovieDetails = () => {
         <p>Rating: {movie.rating}</p>
         <p>Runtime: {movie.runtime}</p>
         <p>Overview: {movie.overview}</p>
-        <button onClick={handleEditClick} className="edit-movie-button">
-          Edit Movie
-        </button>
-      </div>
-      {/* Conditional rendering of the MovieDialog */}
-      {editMode && (
-        <MovieDialog
-        initialMovieInfo={movie}
-        onSubmit={handleMovieUpdate}
-        onClose={handleCloseDialog}
-        />
-      )}
+      </div>    
     </div>
   );
 };

@@ -14,7 +14,6 @@ function App() {
         <Routes>
           <Route path="/" element={<MovieListPage/>} />
           <Route path="/dialog" element={<DialogDisplay/>} />
-          <Route path="/movie/:movieId" element={<MovieDetails/>} />
         </Routes>
       </div>
     </Router>

@@ -6,23 +6,40 @@ import MovieDialog from './MovieDialog';
 import { APP_URL } from '../const';
 import GenreSelect from './GenreSelect';
 import SearchForm from './SearchForm';
+import MovieDetails from './MovieDetails'
+import Dialog from './Dialog'
 import './MovieListPage.css'
 
 
 const MovieListPage = () => {
   const navigate = useNavigate();
-  const params = useParams();
+  const searchParams = new URL(window.location).searchParams;
 
+  const [editMode, setEditMode] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [movies, setMovies] = useState([]);
-  const [sortSelection, setSortSelection] = useState(params.sortBy || 'release_date');
+  const [sortSelection, setSortSelection] = useState(searchParams.get('sortBy')|| 'release_date');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchBy, setSearchBy] = useState('title');
-  const [genre, setGenre] = useState(params.filter || 'ALL');
-  const [sortOrder, setSortOrder] = useState(params.sortOrder || 'asc');
+  const [genre, setGenre] = useState(searchParams.get('filter')|| 'ALL');
+  const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'asc');
+
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const [movieEdit, setMovieEdit] = useState(null);
+
+  const openModal = (movieId) => {
+    setSelectedMovieId(movieId);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedMovieId(null);
+  };
+
 
   useEffect(() => {
-    console.log(params);
     let urlStr = `?sortBy=${sortSelection}&sortOrder=${sortOrder}`;
     if(searchQuery && searchQuery !== '') {
       urlStr = `${urlStr}&search=${searchQuery}&searchBy=${searchBy}`;
@@ -30,7 +47,7 @@ const MovieListPage = () => {
     if(genre !== 'ALL') {
       urlStr = `${urlStr}&filter=${genre}`;
     }
-    navigate(urlStr);
+    navigate(urlStr ,{ replace: true });
   }, [sortSelection, genre, searchQuery, searchBy, sortOrder,navigate])
 
 
@@ -96,6 +113,37 @@ const MovieListPage = () => {
     setGenre(selectedGenre);
   }
 
+  const handleEditCloseDialog = () => {
+    setEditMode(false);
+  }
+
+  const handleMovieUpdate = (newMovie) => {
+    // Logic to handle the new movie submission
+    if(typeof(newMovie.genres) === 'string')
+        newMovie = {...newMovie, genres: newMovie.genres?.split(",")}
+    const url = new URL(`${APP_URL}/movies`);
+    fetch(url , {
+      method: "PUT",
+      body: JSON.stringify(newMovie),
+      headers: {
+        "content-type": "application/json"
+      }
+    }).then(res => res.json()).then((newMovie)=> {
+      setMovies((prevMovies) =>
+        prevMovies.map((oldMovie) =>
+          oldMovie.id === newMovie.id ? newMovie : oldMovie
+        )
+      );
+    })
+    setEditMode(false); // Close the edit dialog
+  };
+
+  const handleEditClick = (movieEdit) => {
+    setMovieEdit(movieEdit);
+    setEditMode(true); // Set the state to true to open the MovieDialog
+  };
+
+
   return (
     <div>
       <button onClick={handleAddMovieClick} className="add-movie-button">
@@ -108,10 +156,27 @@ const MovieListPage = () => {
       </div>
       <div className="movie-list">
         {movies.map((movie) => (
-          <MovieTile key={movie.id} movieInfo={movie} onDelete={handlDelete} />
+          <MovieTile key={movie.id} movieInfo={movie} onDelete={handlDelete} handleClick={(movie) => openModal(movie.id)} handleEditClick={handleEditClick}/>
         ))}
       </div>
       {isDialogOpen && <MovieDialog onClose={handleCloseDialog} onSubmit={handleMovieSubmit} />}
+
+      {isModalOpen && selectedMovieId && (
+        <Dialog
+        title="Movie Details"
+        onClose={closeModal}
+        >
+          <MovieDetails movieId={selectedMovieId} onClose={closeModal} />
+        </Dialog>
+      )}
+
+      {editMode && (
+        <MovieDialog
+        initialMovieInfo={movieEdit}
+        onSubmit={handleMovieUpdate}
+        onClose={handleEditCloseDialog}
+        />
+      )}
     </div>
   );
 };
