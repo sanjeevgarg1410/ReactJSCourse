@@ -2,16 +2,23 @@
 import React, { useState , useEffect} from 'react';
 import Dialog from './Dialog';
 import MovieForm from './MovieForm';
+import {  useOutletContext , useNavigate} from 'react-router-dom';
+import MovieDetails from './MovieDetails';
 
-const MovieDialog = ({ initialMovieInfo, onSubmit, onClose }) => {
+
+const MovieDialog = () => {
+  const navigate = useNavigate();
+  const context = useOutletContext();
+  const onSubmitHandler = context.onSubmitHandler;
+  const initialMovieInfo = context.initialMovieInfo;
+  const displayMode = context.display;
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [movieInfo, setMovieInfo] = useState(initialMovieInfo || null);
+  const [movieInfo, setMovieInfo] = useState(context.initialMovieInfo || null);
+
 
   const handleFormSubmit = (movieData) => {
-    // Update the movie data (you would typically send this data to a server or update some global state)
-    console.log(movieData); // Placeholder for actual update logic
-    onSubmit(movieData); // Call the provided onMovieUpdate function with the new movie data
-    onClose(); // Close the dialog after submission
+    onSubmitHandler(movieData); // Call the provided onMovieUpdate function with the new movie data
+    navigate("/movies");
   };
 
   const handleOpenDialog = () => {
@@ -19,8 +26,7 @@ const MovieDialog = ({ initialMovieInfo, onSubmit, onClose }) => {
   };
 
   const handleCloseDialog = () => {
-    setDialogOpen(false);
-    onClose();
+    navigate("/movies");
   };
 
   // Automatically open the dialog if initialMovieInfo is provided
@@ -32,13 +38,14 @@ const MovieDialog = ({ initialMovieInfo, onSubmit, onClose }) => {
     <>
       {isDialogOpen && (
         <Dialog
-          title={movieInfo ? "Edit Movie" : "Add Movie"}
+          title={displayMode === 'details' ? "Movie Details" : displayMode === 'edit' ?  'Edit Movie' : 'Add Movie'}
           onClose={handleCloseDialog}
         >
-          <MovieForm
+          {displayMode !== 'details' ?  <MovieForm
             initialMovieInfo={movieInfo}
             onSubmit={handleFormSubmit}
-          />
+          />: <MovieDetails/>}
+         
         </Dialog>
       )}
     </>

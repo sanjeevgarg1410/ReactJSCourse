@@ -1,21 +1,21 @@
 import React from "react";
 
-class GenreSelect extends React.Component {
-  handleGenreClick = (genre) => {
-    this.props.onSelect(genre);
+function GenreSelect (props) {
+
+  const handleGenreClick = (genre) => {
+    props.onSelect(genre);
   };
 
-  render() {
+ 
     return (
-      <div className="genreSelect">
-        <h1>Genre</h1>
-        {this.props.genres.map((genre) => (
+      <div className="genres">
+        {props.genres.map((genre) => (
           <button
             key={genre}
             className={`genreBtn ${
-              this.props.selectedGenre === genre ? "selected" : ""
+              props.selectedGenre === genre ? "selected" : ""
             }`}
-            onClick={() => this.handleGenreClick(genre)}
+            onClick={() => handleGenreClick(genre)}
           >
             {genre}
           </button>
@@ -23,6 +23,5 @@ class GenreSelect extends React.Component {
       </div>
     );
   }
-}
 
 export default GenreSelect;

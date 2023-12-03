@@ -1,129 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import './MovieForm.css'
+import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import './MovieForm.css';
 
 function MovieForm({ initialMovieInfo, onSubmit }) {
-  const [movie, setMovie] = useState({
-    name: '',
-    title: '',
-    rating: '',
-    runtime: '',
-    overview: '',
-    releaseDate: '',
-    movieUrl: '',
-    genre: ''
+  const { handleSubmit, control, setValue } = useForm({
+    defaultValues: initialMovieInfo || {
+      title: '',
+      runtime: 0,
+      overview: '',
+      release_date: '',
+      poster_path: '',
+      genres: ''
+    }
   });
 
-  useEffect(() => {
-    if (initialMovieInfo) {
-      setMovie(initialMovieInfo);
-    } else {
-      setMovie({
-        name: '',
-        title: '',
-        rating: '',
-        runtime: '',
-        overview: '',
-        releaseDate: '',
-        movieUrl: '',
-        genre: ''
-      });
-    }
-  }, [initialMovieInfo]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setMovie({ ...movie, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(movie);
+  const handleFormSubmit = (data) => {
+    onSubmit(data, "POST");
   };
 
   return (
     <div className="movie-form">
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Name</label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          value={movie.name}
-          onChange={handleChange}
-        />
-      </div>
-      <div >
-        <label htmlFor="title">Title</label>
-        <input
-        id="title"
-          name="title"
-          type="text"
-          value={movie.title}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="rating">Rating</label>
-        <input
-          id="rating"
-          name="rating"
-          type="text"
-          value={movie.rating}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="runtime">Runtime</label>
-        <input
-          id="runtime"
-          name="runtime"
-          type="text"
-          value={movie.runtime}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="overview">Overview</label>
-        <textarea
-          id="overview"
-          name="overview"
-          value={movie.overview}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="releasedate">Release Date</label>
-        <input
-          id="releasedate"
-          name="releaseDate"
-          type="date"
-          value={movie.releaseDate}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="movieurl">Movie URL</label>
-        <input
-          id="movieurl"
-          name="movieUrl"
-          type="url"
-          value={movie.movieUrl}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="genre">Genre</label>
-        <input 
-          id="genre"
-          name="genre"
-          type="text"
-          value={movie.genre}
-          onChange={handleChange}
-        />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <div>
+          <label htmlFor="title">Title</label>
+          <Controller
+            name="title"
+            control={control}
+            render={({ field }) => <input {...field} type="text" />}
+          />
+        </div>
+        <div>
+          <label htmlFor="runtime">Runtime</label>
+          <Controller
+            name="runtime"
+            control={control}
+            render={({ field }) => <input {...field} type="number" />}
+          />
+        </div>
+        <div>
+          <label htmlFor="overview">Overview</label>
+          <Controller
+            name="overview"
+            control={control}
+            render={({ field }) => <textarea {...field} />}
+          />
+        </div>
+        <div>
+          <label htmlFor="release_date">Release Date</label>
+          <Controller
+            name="release_date"
+            control={control}
+            render={({ field }) => <input {...field} type="date" />}
+          />
+        </div>
+        <div>
+          <label htmlFor="poster_path">Movie URL</label>
+          <Controller
+            name="poster_path"
+            control={control}
+            render={({ field }) => <input {...field} type="url" />}
+          />
+        </div>
+        <div>
+          <label htmlFor="genres">Genres(comma, separated)</label>
+          <Controller
+            name="genres"
+            control={control}
+            render={({ field }) => <input {...field} type="text" />}
+          />
+        </div>
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 }
