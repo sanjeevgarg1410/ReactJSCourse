@@ -4,14 +4,13 @@ import MovieDialog from './MovieDialog'; // Import the MovieDialog component
 import './MovieDetails.css'; // Ensure you have the corresponding CSS file
 import { APP_URL } from '../const';
 
-const MovieDetails = ({movieId}) => {
-  const [movie, setMovie] = useState({});
- 
+const MovieDetails = () => {
+ const [movie, setMovie] = useState({});
+ const { movieId } = useParams();
   useEffect(() => {
     const url = new URL(`${APP_URL}/movies/${movieId}`)
       fetch(url).then(res => res.json()).then((res) =>{
          setMovie(res);
-         console.log(res);
       })
   },[])
 

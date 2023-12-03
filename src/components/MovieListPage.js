@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useNavigate, useParams} from 'react-router-dom'
+import {useNavigate, useParams, Outlet , Link , useOutletContext} from 'react-router-dom'
 import SortControl from './SortControl';
 import MovieTile from './MovieTile';
 import MovieDialog from './MovieDialog';
@@ -13,8 +13,8 @@ import './MovieListPage.css'
 
 const MovieListPage = () => {
   const navigate = useNavigate();
+  const { movieId } = useParams();
   const searchParams = new URL(window.location).searchParams;
-
   const [editMode, setEditMode] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [movies, setMovies] = useState([]);
@@ -25,19 +25,29 @@ const MovieListPage = () => {
   const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'asc');
 
   const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const [selectedMovieId, setSelectedMovieId] = useState(movieId);
   const [movieEdit, setMovieEdit] = useState(null);
+
+  const [displayMode, setDisplayMode] = useState('list');
 
   const openModal = (movieId) => {
     setSelectedMovieId(movieId);
-    setModalOpen(true);
+    navigate(`/movies/${movieId}`);
   };
 
   const closeModal = () => {
-    setModalOpen(false);
     setSelectedMovieId(null);
+    navigate("/movies");
   };
 
+  useEffect( () => {
+       if(movieId) {
+         setDisplayMode("details");
+       }
+       if(window.location.pathname.endsWith('/edit')) {
+        setDisplayMode("edit");
+      }
+  },[])
 
   useEffect(() => {
     let urlStr = `?sortBy=${sortSelection}&sortOrder=${sortOrder}`;
@@ -46,6 +56,9 @@ const MovieListPage = () => {
     }
     if(genre !== 'ALL') {
       urlStr = `${urlStr}&filter=${genre}`;
+    }
+    if(selectedMovieId) {
+      urlStr=selectedMovieId;
     }
     navigate(urlStr ,{ replace: true });
   }, [sortSelection, genre, searchQuery, searchBy, sortOrder,navigate])
@@ -113,10 +126,6 @@ const MovieListPage = () => {
     setGenre(selectedGenre);
   }
 
-  const handleEditCloseDialog = () => {
-    setEditMode(false);
-  }
-
   const handleMovieUpdate = (newMovie) => {
     // Logic to handle the new movie submission
     if(typeof(newMovie.genres) === 'string')
@@ -139,16 +148,17 @@ const MovieListPage = () => {
   };
 
   const handleEditClick = (movieEdit) => {
-    setMovieEdit(movieEdit);
-    setEditMode(true); // Set the state to true to open the MovieDialog
+    navigate(`/movies/${movieEdit.id}/edit`);
   };
 
 
+  const handleAddMovieLinkClick = () => {
+    navigate("/movies/new?sortBy=release_date&sortOrder=asc");
+  }
+  
   return (
     <div>
-      <button onClick={handleAddMovieClick} className="add-movie-button">
-        Add Movie
-      </button>
+      <button onClick={handleAddMovieLinkClick}>Add Movie</button>
       <SearchForm  onSearch= {onSearch}/>
       <div className='topheader'>
         <GenreSelect genres={["ALL","THRILLER","COMEDY","ACTION"]} selectedGenre = {genre} onSelect = {onSelect}/>
@@ -159,24 +169,7 @@ const MovieListPage = () => {
           <MovieTile key={movie.id} movieInfo={movie} onDelete={handlDelete} handleClick={(movie) => openModal(movie.id)} handleEditClick={handleEditClick}/>
         ))}
       </div>
-      {isDialogOpen && <MovieDialog onClose={handleCloseDialog} onSubmit={handleMovieSubmit} />}
-
-      {isModalOpen && selectedMovieId && (
-        <Dialog
-        title="Movie Details"
-        onClose={closeModal}
-        >
-          <MovieDetails movieId={selectedMovieId} onClose={closeModal} />
-        </Dialog>
-      )}
-
-      {editMode && (
-        <MovieDialog
-        initialMovieInfo={movieEdit}
-        onSubmit={handleMovieUpdate}
-        onClose={handleEditCloseDialog}
-        />
-      )}
+      <Outlet context={{movieSubmitHandler: handleMovieSubmit , display: displayMode ,   initialMovieInfo: movieEdit }}/>
     </div>
   );
 };
