@@ -19,7 +19,7 @@ const MovieListPage = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [movies, setMovies] = useState([]);
   const [sortSelection, setSortSelection] = useState(searchParams.get('sortBy')|| 'release_date');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [searchBy, setSearchBy] = useState('title');
   const [genre, setGenre] = useState(searchParams.get('filter')|| 'ALL');
   const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'asc');
@@ -110,6 +110,7 @@ const MovieListPage = () => {
   };
 
   const onSelect = (selectedGenre) => {
+    setSearchQuery('');
     setGenre(selectedGenre);
   }
 
@@ -149,7 +150,7 @@ const MovieListPage = () => {
       <button onClick={handleAddMovieClick} className="add-movie-button">
         Add Movie
       </button>
-      <SearchForm  onSearch= {onSearch}/>
+      <SearchForm  onSearch= {onSearch} searchQuery ={searchQuery} />
       <div className='topheader'>
         <GenreSelect genres={["ALL","THRILLER","COMEDY","ACTION"]} selectedGenre = {genre} onSelect = {onSelect}/>
         <SortControl currentSelection={sortSelection} onSortChange={handleSortChange} />

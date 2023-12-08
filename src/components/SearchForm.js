@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function SearchForm(props) {
 
     const [query, setQuery] = useState('');
+    
+    useEffect(()=> {
+        setQuery(props.searchQuery)
+    },[])
 
     const handleInputChange = (e) => {
         setQuery(e.target.value);
