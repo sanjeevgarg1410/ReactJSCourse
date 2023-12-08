@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 
 function SearchForm(props) {
 
@@ -17,6 +17,10 @@ function SearchForm(props) {
             handleSearch();
         }
     }
+
+    useEffect(()=> {
+        setQuery(props.searchQuery)
+    },[])
     
     return (
         <div className="searchForm">

@@ -14,7 +14,7 @@ const MovieListPage = () => {
   const searchParams = new URL(window.location).searchParams;
   const [movies, setMovies] = useState([]);
   const [sortSelection, setSortSelection] = useState(searchParams.get('sortBy')|| 'release_date');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [searchBy, setSearchBy] = useState('title');
   const [genre, setGenre] = useState(searchParams.get('filter')|| 'ALL');
   const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'asc');
@@ -98,6 +98,7 @@ const MovieListPage = () => {
   };
 
   const onSelect = (selectedGenre) => {
+    setSearchQuery('');
     setGenre(selectedGenre);
   }
 
