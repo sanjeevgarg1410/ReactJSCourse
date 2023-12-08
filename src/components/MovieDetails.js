@@ -7,12 +7,24 @@ import { APP_URL } from '../const';
 const MovieDetails = () => {
  const [movie, setMovie] = useState({});
  const { movieId } = useParams();
-  useEffect(() => {
-    const url = new URL(`${APP_URL}/movies/${movieId}`)
-      fetch(url).then(res => res.json()).then((res) =>{
-         setMovie(res);
-      })
-  },[])
+ useEffect(() => {
+  const url = new URL(`${APP_URL}/movies/${movieId}`);
+  
+  fetch(url)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then((res) => {
+      console.log('Response from API:', res);
+      setMovie(res);
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+}, []);
 
   if (!movie) {
     return <div>Movie not found.</div>;

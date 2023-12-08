@@ -27,7 +27,7 @@ function MovieForm({ initialMovieInfo, onSubmit }) {
             name="title"
             rules={{ required: 'Title is required' }}
             control={control}
-            render={({ field }) => <input {...field} type="text" />}
+            render={({ field }) => <input {...field} id="title" type="text" />}
           />
         </div>
         <div>
