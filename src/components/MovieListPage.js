@@ -17,7 +17,7 @@ const MovieListPage = () => {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [searchBy, setSearchBy] = useState('title');
   const [genre, setGenre] = useState(searchParams.get('filter')|| 'ALL');
-  const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'asc');
+  const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'desc');
   const [selectedMovieId, setSelectedMovieId] = useState(movieId);
   const [movieEdit, setMovieEdit] = useState(null);
 
@@ -72,11 +72,11 @@ const MovieListPage = () => {
         "content-type": "application/json"
       }
     }).then(res => res.json()).then((newMovie)=> {
-       const newMovies = [...movies, newMovie];
+       const newMovies = [newMovie, ...movies, ];
        setMovies(newMovies);
     })
 
-    navigate("/movies")
+    // navigate("/movies")
   };
 
   const handlDelete = (id) => {
@@ -150,7 +150,7 @@ const MovieListPage = () => {
   return (
     <div>
       <button onClick={handleAddMovieLinkClick}>Add Movie</button>
-      <SearchForm  onSearch= {onSearch}/>
+      <SearchForm  onSearch= {onSearch} searchQuery = {searchQuery} />
       <div className='topheader'>
         <GenreSelect genres={["ALL","THRILLER","COMEDY","ACTION"]} selectedGenre = {genre} onSelect = {onSelect}/>
         <SortControl currentSelection={sortSelection} onSortChange={handleSortChange} />

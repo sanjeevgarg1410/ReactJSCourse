@@ -25,6 +25,7 @@ function MovieForm({ initialMovieInfo, onSubmit }) {
           <label htmlFor="title">Title</label>
           <Controller
             name="title"
+            rules={{ required: 'Title is required' }}
             control={control}
             render={({ field }) => <input {...field} type="text" />}
           />
@@ -33,6 +34,7 @@ function MovieForm({ initialMovieInfo, onSubmit }) {
           <label htmlFor="runtime">Runtime</label>
           <Controller
             name="runtime"
+            rules={{ required: 'RunTime is required' }}
             control={control}
             render={({ field }) => <input {...field} type="number" />}
           />

@@ -17,3 +17,8 @@
     padding: 8px;
     margin-right: 10px;
 }
+
+.genres button.selected {
+   color: black;
+   background-color:  rgb(186, 167, 167);
+}
