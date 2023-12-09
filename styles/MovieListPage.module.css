@@ -1,0 +1,79 @@
+/* MovieListPage.module.css */
+
+.container {
+   padding: 10px;
+   display: block;
+}
+
+.topHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.searchForm {
+    margin: auto;
+    width: 50%;
+}
+
+.searchFormInput {
+    margin-right: 20px;
+}
+
+.genres {
+    display: flex;
+}
+
+.genresButton {
+    padding: 8px;
+    margin-right: 10px;
+}
+
+.genresButtonSelected {
+   color: black;
+   padding: 8px;
+   margin-right: 10px;
+   background-color: rgb(186, 167, 167);
+}
+
+
+.movieList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust the minmax values based on your preference */
+    gap: 20px; /* Space between grid items */
+    padding: 20px; /* Padding around the entire grid */
+    margin: 0 auto; /* Center the grid */
+    max-width: 1200px; /* Max width of the grid, adjust as needed */
+    justify-items: center; /* Center items horizontally */
+    align-items: stretch; /* Stretch items vertically */
+}
+
+.movieTile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* A subtle shadow */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Ensures content fits within the border-radius */
+    background-color: #ffffff; /* Card background color */
+    padding: 15px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition for hover effect */
+}
+
+.movieTile:hover {
+    transform: scale(1.03); /* Slightly scale up on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+.movieTile img {
+    width: 100%; /* Make image take full width of the card */
+    height: auto; /* Maintain aspect ratio */
+    border-bottom: 1px solid #eaeaea; /* A line between the image and the content */
+}
+
+.movieTile h2 {
+    margin-top: 10px; /* Space between title and image */
+    font-size: 1.2em; /* Adjust title size */
+    text-align: center; /* Center-align the title */
+}
