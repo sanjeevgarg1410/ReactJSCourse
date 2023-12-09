@@ -1,43 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-class SearchForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            query: this.props.initialSearchQuery || '',
-        };
+function SearchForm(props) {
+
+    const [query, setQuery] = useState('');
+    
+    useEffect(()=> {
+        setQuery(props.searchQuery)
+    },[])
+
+    const handleInputChange = (e) => {
+        setQuery(e.target.value);
     }
 
-    handleInputChange = (e) => {
-        this.setState({ query: e.target.value });
+    const handleSearch = () => {
+        props.onSearch(query);
     }
 
-    handleSearch = () => {
-        this.props.onSearch(this.state.query);
-    }
-
-    handleKeyPress = (e) => {
+    const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            this.handleSearch();
+            handleSearch();
         }
     }
-
-    render() {
-        const searchResults = this.props.results || [];
-        return (
-            <div className="searchForm">
-                <h1>Search Form</h1>
-                <input value={this.state.query} onChange={this.handleInputChange} onKeyPress={this.handleKeyPress} className="searchInput" placeholder='Search' name='search'/>
-                <button onClick={this.handleSearch} className="btn" type='submit'>Search</button>
-                <div className='search-results'>
-                    {searchResults.map( (result) =>{
-                        return <div> {result} </div>
-                    })}
-                </div>
-            </div>
-        );
-    }
+    
+    return (
+        <div className="searchForm">
+            <h1>Find a Movie</h1>
+            <input value={query} onChange={handleInputChange} onKeyPress={handleKeyPress} className="searchInput" placeholder='Search' name='search' />
+            <button onClick={handleSearch} className="btn" type='submit'>Search</button>
+        </div>
+    );
 }
+
 
 
 

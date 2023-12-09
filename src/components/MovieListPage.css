@@ -1,0 +1,25 @@
+.topheader {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.searchForm {
+    margin: auto;
+    width: 50%;
+}
+.searchForm input {
+    margin-right: 20px;
+}
+
+.genres button {
+    padding: 8px;
+    margin-right: 10px;
+}
+
+
+.genres button.selected {
+   background-color: rgb(86, 62, 62);
+   color: white;
+}

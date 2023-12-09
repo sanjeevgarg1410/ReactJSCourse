@@ -18,7 +18,7 @@ describe('MovieDetails', () => {
 
     // Assert that specific movie details are present
     expect(screen.getByText(sampleMovie.title)).toBeInTheDocument();
-    expect(screen.getByText(`Release Date: ${sampleMovie.releaseDate}`)).toBeInTheDocument();
+    expect(screen.getByText(`Release Date: ${sampleMovie.release_date}`)).toBeInTheDocument();
     expect(screen.getByText(`Rating: ${sampleMovie.rating}`)).toBeInTheDocument();
     expect(screen.getByText(`Runtime: ${sampleMovie.runtime}`)).toBeInTheDocument();
   });
