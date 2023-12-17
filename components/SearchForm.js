@@ -1,7 +1,16 @@
 import React, { useState , useEffect} from 'react';
-import styles from '../styles/MovieListPage.module.css';
 
 function SearchForm(props) {
+
+
+    const searchFormStyle = {
+        margin: 'auto',
+        width: '50%',
+      };
+      
+    const searchFormInputStyle = {
+    marginRight: '20px',
+    };
 
     const [query, setQuery] = useState();
 
@@ -24,9 +33,9 @@ function SearchForm(props) {
     },[])
     
     return (
-        <div className={styles.searchForm}>
+        <div style={searchFormStyle}>
             <h1>Find a Movie</h1>
-            <input value={query} onChange={handleInputChange} onKeyPress={handleKeyPress} className={styles.searchInput} placeholder='Search' name='search' />
+            <input value={query} onChange={handleInputChange} onKeyPress={handleKeyPress} style={searchFormInputStyle} placeholder='Search' name='search' />
             <button onClick={handleSearch} className="btn" type='submit'>Search</button>
         </div>
     );

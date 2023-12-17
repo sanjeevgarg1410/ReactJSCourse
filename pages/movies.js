@@ -5,8 +5,66 @@ import MovieTile from '../components/MovieTile';
 import { APP_URL } from '../const';
 import GenreSelect from '../components/GenreSelect';
 import SearchForm from '../components/SearchForm';
-import styles from '../styles/MovieListPage.module.css'; // Make sure to use CSS Modules
+import pagestyling from '../styles/MovieListPage.module.css'; // Make sure to use CSS Modules
 import MovieDialog from '@/components/MovieDialog';
+
+
+const containerStyle = {
+    padding: '10px',
+    display: 'block',
+  };
+  
+  const topHeaderStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '50px',
+    marginBottom: '50px',
+  };
+    
+  const movieListStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gap: '20px',
+    padding: '20px',
+    margin: '0 auto',
+    maxWidth: '1200px',
+    justifyItems: 'center',
+    alignItems: 'stretch',
+  };
+  
+  const movieTileStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    backgroundColor: '#ffffff',
+    padding: '15px',
+    transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  };
+  
+  const movieTileHoverStyle = {
+    transform: 'scale(1.03)',
+    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
+  };
+  
+  const movieTileImgStyle = {
+    width: '100%',
+    height: 'auto',
+    borderBottom: '1px solid #eaeaea',
+  };
+  
+  const movieTileH2Style = {
+    marginTop: '10px',
+    fontSize: '1.2em',
+    textAlign: 'center',
+  };
+
+
+
+
+
 
 // Fetch movies server-side
 export async function getServerSideProps({ query }) {
@@ -144,15 +202,15 @@ const MovieListPage = ({ initialMovies, initialSortBy, initialSortOrder, initial
     }
 
     return (
-        <div className={styles.container}>
+        <div style={containerStyle}>
             {/* <button onClick={() => router.push("/movies/new?sortBy=release_date&sortOrder=asc")}>Add Movie</button> */}
             <button onClick={() => openDialog('add')}>Add Movie</button>
             <SearchForm onSearch={onSearch} searchQuery={searchQuery} />
-            <div className={styles.topHeader}>
+            <div style={topHeaderStyle}>
                 <GenreSelect genres={["ALL", "THRILLER", "COMEDY", "ACTION"]} selectedGenre={genre} onSelect={updateGenre} />
                 <SortControl currentSelection={sortSelection} onSortChange={setSortSelection} />
             </div>
-            <div className={styles.movieList}>
+            <div style={movieListStyle}>
                 {movies.map((movie) => (
                     <MovieTile key={movie.id} movieInfo={movie} onDelete={handlDelete} handleClick={() => openModal(movie.id)} handleEditClick={handleEditClick} />
                 ))}

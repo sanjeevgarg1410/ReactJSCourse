@@ -1,6 +1,38 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ContextMenu from './ContextMenu';
-import styles from '../styles/MovieTile.module.css';
+
+const movieTileStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  borderRadius: '8px',
+  overflow: 'hidden',
+  backgroundColor: '#ffffff',
+  padding: '15px',
+  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+};
+
+const movieTileImgStyle = {
+  width: '100%',
+  height: 'auto',
+  borderBottom: '1px solid #eaeaea',
+};
+
+const movieTileH2Style = {
+  marginTop: '10px',
+  fontSize: '1.2em',
+  textAlign: 'center',
+};
+
+const contextMenuStyle = {
+  position: 'absolute',
+  backgroundColor: '#fff',
+  border: '1px solid #ddd',
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  padding: '8px',
+  zIndex: '1',
+};
 
 const MovieTile = ({ movieInfo, handleClick, handleEditClick, handleDeleteClick }) => {
   const { id, title, poster_path } = movieInfo;
@@ -37,19 +69,18 @@ const MovieTile = ({ movieInfo, handleClick, handleEditClick, handleDeleteClick 
   const isClient = typeof window === 'object';
 
   return (
-    <div className={styles.movieTile} data-testid={`movie-tile-${id}`} onContextMenu={handleContextMenu}>
+    <div style={movieTileStyle} data-testid={`movie-tile-${id}`} onContextMenu={handleContextMenu}>
       <div onClick={() => handleClick(movieInfo)}>
-        <img src={poster_path} alt={title} className={styles.imgStyle} />
-        <h2>{title}</h2>
+        <img src={poster_path} alt={title} style={movieTileImgStyle} />
+        <h2 style={movieTileH2Style}>{title}</h2>
       </div>
       {isClient && contextMenuPosition.x !== 0 && (
         <div
           ref={contextMenuRef}
-          className={styles.contextMenu}
           style={{
             top: contextMenuPosition.y,
             left: contextMenuPosition.x,
-          }}
+            ...contextMenuStyle }}
         >
           <ContextMenu
             onDelete={() => {

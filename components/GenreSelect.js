@@ -1,29 +1,54 @@
-import React from "react";
-import styles from '../styles/MovieListPage.module.css'
+import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
+// GenreSelect component
+function GenreSelect(props) {
+  const router = useRouter();
 
-function GenreSelect (props) {
-
-  const handleGenreClick = (genre) => {
-    props.onSelect(genre);
+  // Inline styles
+  const defaultButtonStyle = {
+    padding: '8px',
+    marginRight: '10px',
   };
 
- 
-    return (
-      <div className={styles.genres}>
-        {props.genres.map((genre) => (
-          <button
-            key={genre}
-            className={
-              props.selectedGenre === genre ? styles.genresButtonSelected : styles.genresButton
+  const selectedButtonStyle = {
+    color: 'black',
+    padding: '8px',
+    marginRight: '10px',
+    backgroundColor: 'rgb(186, 167, 167)',
+  };
+
+  const genresListStyling = {
+    display: 'flex',
+  };
+
+  return (
+    <div style={genresListStyling}>
+      {props.genres.map((genre) => (
+        <Link
+          key={genre}
+          href={{
+            pathname: '/movies',
+            query: {
+              ...router.query,
+              filter: encodeURIComponent(genre),
+            },
+          }}
+        >
+          <span
+            style={
+              props.selectedGenre === genre
+                ? selectedButtonStyle
+                : defaultButtonStyle
             }
-            onClick={() => handleGenreClick(genre)}
           >
             {genre}
-          </button>
-        ))}
-      </div>
-    );
-  }
+          </span>
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 export default GenreSelect;
