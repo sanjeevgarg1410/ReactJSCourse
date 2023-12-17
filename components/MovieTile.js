@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ContextMenu from './ContextMenu';
+import Link from 'next/link';
 
 const movieTileStyle = {
   display: 'flex',
@@ -70,10 +71,12 @@ const MovieTile = ({ movieInfo, handleClick, handleEditClick, handleDeleteClick 
 
   return (
     <div style={movieTileStyle} data-testid={`movie-tile-${id}`} onContextMenu={handleContextMenu}>
-      <div onClick={() => handleClick(movieInfo)}>
-        <img src={poster_path} alt={title} style={movieTileImgStyle} />
-        <h2 style={movieTileH2Style}>{title}</h2>
-      </div>
+       <Link href={`/movies/${id}`}>
+        <div onClick={() => handleClick(movieInfo)}>
+          <img src={poster_path} alt={title} style={movieTileImgStyle} />
+          <h2 style={movieTileH2Style}>{title}</h2>
+        </div>
+      </Link>
       {isClient && contextMenuPosition.x !== 0 && (
         <div
           ref={contextMenuRef}

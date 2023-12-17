@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import SortControl from '../components/SortControl';
-import MovieTile from '../components/MovieTile';
-import { APP_URL } from '../const';
-import GenreSelect from '../components/GenreSelect';
-import SearchForm from '../components/SearchForm';
-import pagestyling from '../styles/MovieListPage.module.css'; // Make sure to use CSS Modules
+import SortControl from '../../components/SortControl';
+import MovieTile from '../../components/MovieTile';
+import { APP_URL } from '../../const';
+import GenreSelect from '../../components/GenreSelect';
+import SearchForm from '../../components/SearchForm';
+// import pagestyling from '../styles/MovieListPage.module.css'; // Make sure to use CSS Modules
 import MovieDialog from '@/components/MovieDialog';
+
 
 
 const containerStyle = {
